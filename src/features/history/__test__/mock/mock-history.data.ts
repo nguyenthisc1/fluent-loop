@@ -1,0 +1,45 @@
+import { HistoryItemEntity } from "../../domain/entities/history.entity";
+
+export const mockHistoryItems = [
+  HistoryItemEntity.create({
+    id: "history-item-1",
+    userId: "mock-user-id",
+    sessionId: "session-1",
+    feedbackReportId: "feedback-1",
+    mode: "interview",
+    status: "completed",
+    title: "Frontend Developer Interview",
+    interviewRole: "Frontend Developer",
+    durationMinutes: 10,
+    score: {
+      overall: 79,
+      fluency: 78,
+      grammar: 82,
+      vocabulary: 75,
+      naturalness: 80,
+    },
+    mainImprovementArea: "Use more specific examples",
+    createdAt: new Date("2026-01-02T10:00:00.000Z"),
+    completedAt: new Date("2026-01-02T10:10:00.000Z"),
+  }),
+  HistoryItemEntity.create({
+    id: "history-item-2",
+    userId: "mock-user-id",
+    sessionId: "session-2",
+    mode: "daily",
+    status: "completed",
+    title: "Small Talk Practice",
+    topic: "Small talk",
+    durationMinutes: 5,
+    score: {
+      overall: 84,
+      fluency: 82,
+      grammar: 85,
+      vocabulary: 80,
+      naturalness: 88,
+    },
+    mainImprovementArea: "Try more natural expressions",
+    createdAt: new Date("2026-01-01T09:00:00.000Z"),
+    completedAt: new Date("2026-01-01T09:05:00.000Z"),
+  }),
+];
