@@ -1,8 +1,8 @@
 import { NotFoundException } from "@/core/exceptions/exception";
 import { PracticeSessionEntity } from "../../domain/entities/practice.entity";
-import type { FeedbackReport, FinishPracticeSessionInput, PracticeMessage, PracticeSessionId, SendPracticeMessageInput, StartPracticeSessionInput } from "../../domain/entities/practice.types";
 import type { PracticeRepository } from "../../domain/repositories/practice.repository";
 import { mockFeedbackReport } from "./mock-practice.data";
+import type { PracticeSessionId, StartPracticeSessionInput, PracticeMessage, SendPracticeMessageInput, FinishPracticeSessionInput, FeedbackReport } from "../../domain/entities/practice.types";
 
 export class MockPracticeRepository implements PracticeRepository {
   private readonly sessions = new Map<PracticeSessionId, PracticeSessionEntity>();
@@ -27,8 +27,10 @@ export class MockPracticeRepository implements PracticeRepository {
       interviewRole: input.interviewRole,
       level: input.level,
       duration: input.duration,
-      // practiceFocus: input.practiceFocus,
+      practiceFocus: input.practiceFocus,
       status: "active",
+      interviewType: input.interviewType,
+      difficulty: input.difficulty,
       messages: [openingMessage],
       createdAt: new Date(),
     });
