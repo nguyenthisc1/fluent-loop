@@ -1,8 +1,8 @@
-import { useCallback, useState } from "react";
-
+import { useCallback, useMemo, useState } from "react";
 import type { PracticeSessionEntity } from "../../domain/entities/practice.entity";
-import type { FinishPracticeSessionInput, SendPracticeMessageInput, StartPracticeSessionInput } from "../../domain/entities/practice.types";
+import type { FinishPracticeSessionInput, PracticeSessionId, SendPracticeMessageInput, StartPracticeSessionInput } from "../../domain/entities/practice.types";
 import { createPracticeDependencies } from "../../practice.container";
+import { presentPracticeSession } from "../helpers/practice-session.presenter";
 
 type PracticeSessionState = {
   session: PracticeSessionEntity | null;
@@ -10,14 +10,32 @@ type PracticeSessionState = {
   error: unknown;
 };
 
-export function usePracticeSession() {
+export function usePracticeSession(initialSession?: PracticeSessionEntity | null) {
   const [state, setState] = useState<PracticeSessionState>({
-    session: null,
+    session: initialSession ?? null,
     loading: false,
     error: null,
   });
-
   const practiceContainer = createPracticeDependencies();
+
+  const loadSession = useCallback(async (sessionId: PracticeSessionId) => {
+    setState((current) => ({ ...current, loading: true, error: null }));
+
+    try {
+      const session = await practiceContainer.getPracticeSessionUseCase.execute(sessionId);
+
+      setState({
+        session,
+        loading: false,
+        error: null,
+      });
+
+      return session;
+    } catch (error) {
+      setState((current) => ({ ...current, loading: false, error }));
+      throw error;
+    }
+  }, []);
 
   const startSession = useCallback(async (input: StartPracticeSessionInput) => {
     setState((current) => ({ ...current, loading: true, error: null }));
@@ -76,8 +94,14 @@ export function usePracticeSession() {
     }
   }, []);
 
+  const presentedSession = useMemo(() => presentPracticeSession(state.session), [state.session]);
+
   return {
-    ...state,
+    session: presentedSession,
+    rawSession: state.session,
+    loading: state.loading,
+    error: state.error,
+    loadSession,
     startSession,
     sendMessage,
     finishSession,
