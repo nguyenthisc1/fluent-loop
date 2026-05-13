@@ -17,101 +17,68 @@ export const router = createBrowserRouter([
     element: <Navigate to="/dashboard" replace />,
   },
   {
-    path: "/sign-in",
-    element: (
-      <AuthGate type="guest">
-        <SignInPage />
-      </AuthGate>
-    ),
+    element: <AuthGate access="guest" />,
+    children: [
+      {
+        path: "/sign-in",
+        element: <SignInPage />,
+      },
+      {
+        path: "/sign-up",
+        element: <SignUpPage />,
+      },
+    ],
   },
   {
-    path: "/sign-up",
-    element: (
-      <AuthGate type="guest">
-        <SignUpPage />
-      </AuthGate>
-    ),
+    element: <AuthGate access="onboarding" />,
+    children: [
+      {
+        path: "/onboarding",
+        element: <OnboardingPage />,
+      },
+    ],
   },
   {
-    path: "/onboarding",
-    element: (
-      <AuthGate type="onboarding">
-        <OnboardingPage />
-      </AuthGate>
-    ),
+    element: <AuthGate access="protected" />,
+    children: [
+      {
+        path: "/dashboard",
+        element: <DashboardPage />,
+      },
+      {
+        path: "/practice",
+        element: <PracticeSetupPage />,
+      },
+      {
+        path: "/practice/:sessionId",
+        element: <PracticeSessionPage />,
+      },
+      {
+        path: "/interview",
+        element: <InterviewSetupPage />,
+      },
+      {
+        path: "/interview/:sessionId",
+        element: <PracticeSessionPage />,
+      },
+      {
+        path: "/feedback/:reportId",
+        element: <FeedbackPage />,
+      },
+      {
+        path: "/history",
+        element: <HistoryPage />,
+      },
+      {
+        path: "/vocabulary",
+        element: <VocabularyPage />,
+      },
+      // {
+      //   path: "/settings",
+      //   element: <SettingsPage />,
+      // },
+    ],
   },
-  {
-    path: "/dashboard",
-    element: (
-      <AuthGate type="protected">
-        <DashboardPage />
-      </AuthGate>
-    ),
-  },
-  {
-    path: "/practice",
-    element: (
-      <AuthGate type="protected">
-        <PracticeSetupPage />
-      </AuthGate>
-    ),
-  },
-  {
-    path: "/practice/:sessionId",
-    element: (
-      <AuthGate type="protected">
-        <PracticeSessionPage />
-      </AuthGate>
-    ),
-  },
-  {
-    path: "/interview",
-    element: (
-      <AuthGate type="protected">
-        <InterviewSetupPage />
-      </AuthGate>
-    ),
-  },
-  {
-    path: "/interview/:sessionId",
-    element: (
-      <AuthGate type="protected">
-        <PracticeSessionPage />
-      </AuthGate>
-    ),
-  },
-  {
-    path: "/feedback/:reportId",
-    element: (
-      <AuthGate type="protected">
-        <FeedbackPage />
-      </AuthGate>
-    ),
-  },
-  {
-    path: "/history",
-    element: (
-      <AuthGate type="protected">
-        <HistoryPage />
-      </AuthGate>
-    ),
-  },
-  {
-    path: "/vocabulary",
-    element: (
-      <AuthGate type="protected">
-        <VocabularyPage />
-      </AuthGate>
-    ),
-  },
-  // {
-  //   path: "/settings",
-  //   element: (
-  //     <AuthGate type="protected">
-  //       <SettingsPage />
-  //     </AuthGate>
-  //   ),
-  // },
   {
     path: "*",
     element: <Navigate to="/dashboard" replace />,

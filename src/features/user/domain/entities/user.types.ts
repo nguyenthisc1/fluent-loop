@@ -1,6 +1,6 @@
 export type UserId = string;
 
-export type AuthStatus = "idle" | "loading" | "unauthenticated" | "needs_onboarding" | "authenticated";
+export type AuthStatus = "checking" | "unauthenticated" | "needs_onboarding" | "authenticated";
 
 export type EnglishLevel = "A1" | "A2" | "B1" | "B2" | "C1";
 

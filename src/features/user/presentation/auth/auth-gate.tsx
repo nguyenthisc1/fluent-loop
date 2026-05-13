@@ -1,7 +1,7 @@
-import { useAuth } from "@/features/user/presentation/auth/use-auth";
-import RouteLoading from "@/shared/components/layouts/route-loading";
 import type { ReactNode } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
+import RouteLoading from "./route-loading";
+import { useAuth } from "./use-auth";
 
 type AuthGateAccess = "guest" | "onboarding" | "protected";
 
@@ -10,20 +10,20 @@ type AuthGateProps = {
   children?: ReactNode;
 };
 
-export function AuthGate({ access, children }: AuthGateProps) {
+export default function AuthGate({ access, children }: AuthGateProps) {
   const location = useLocation();
   const auth = useAuth();
 
-  if (auth.status === "checking") {
+  if (auth.isChecking) {
     return <RouteLoading />;
   }
 
   if (access === "guest") {
-    if (auth.status === "needs_onboarding") {
+    if (auth.needsOnboarding) {
       return <Navigate to="/onboarding" replace />;
     }
 
-    if (auth.status === "authenticated") {
+    if (auth.isAuthenticated) {
       return <Navigate to="/dashboard" replace />;
     }
 
@@ -31,28 +31,24 @@ export function AuthGate({ access, children }: AuthGateProps) {
   }
 
   if (access === "onboarding") {
-    if (auth.status === "unauthenticated") {
+    if (auth.isUnauthenticated) {
       return <Navigate to="/sign-in" replace state={{ from: location }} />;
     }
 
-    if (auth.status === "authenticated") {
+    if (auth.isAuthenticated) {
       return <Navigate to="/dashboard" replace />;
     }
 
     return children ? <>{children}</> : <Outlet />;
   }
 
-  if (access === "protected") {
-    if (auth.status === "unauthenticated") {
-      return <Navigate to="/sign-in" replace state={{ from: location }} />;
-    }
-
-    if (auth.status === "needs_onboarding") {
-      return <Navigate to="/onboarding" replace />;
-    }
-
-    return children ? <>{children}</> : <Outlet />;
+  if (auth.isUnauthenticated) {
+    return <Navigate to="/sign-in" replace state={{ from: location }} />;
   }
 
-  return null;
+  if (auth.needsOnboarding) {
+    return <Navigate to="/onboarding" replace />;
+  }
+
+  return children ? <>{children}</> : <Outlet />;
 }

@@ -12,6 +12,7 @@ export function UserDependenciesProvider({ dependencies, children }: UserDepende
   return <UserDependenciesContext.Provider value={dependencies}>{children}</UserDependenciesContext.Provider>;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useUserDependencies() {
   const dependencies = useContext(UserDependenciesContext);
 
