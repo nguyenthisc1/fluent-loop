@@ -1,8 +1,16 @@
+import type { EnglishLevel } from "@/features/user/domain/entities/user.types";
+
 export type PracticeSessionId = string;
 export type PracticeMode = "daily" | "interview";
 export type PracticeStatus = "active" | "completed";
 export type MessageSender = "user" | "ai";
 export type PracticeDuration = 5 | 10 | 15;
+
+export type InterviewType = "behavioral" | "technical" | "hr_screening" | "product_thinking" | "mixed";
+
+export type InterviewDifficulty = "friendly" | "standard" | "challenging";
+
+export type PracticeFocus = "speaking_fluency" | "grammar_accuracy" | "vocabulary_range" | "pronunciation" | "interview_confidence" | "natural_expression";
 
 export type PracticeMessage = {
   id: string;
@@ -56,10 +64,13 @@ export type PracticeSession = {
 export type StartPracticeSessionInput = {
   userId: string;
   mode: PracticeMode;
-  level: PracticeSession["level"];
+  level: EnglishLevel;
   duration: PracticeDuration;
+  practiceFocus?: PracticeFocus[];
   topic?: string;
   interviewRole?: string;
+  interviewType?: InterviewType;
+  difficulty?: InterviewDifficulty;
 };
 
 export type SendPracticeMessageInput = {
