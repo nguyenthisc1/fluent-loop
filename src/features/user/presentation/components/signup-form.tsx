@@ -5,12 +5,12 @@ import { Button } from "../../../../shared/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../../shared/components/ui/card";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "../../../../shared/components/ui/field";
 import { Input } from "../../../../shared/components/ui/input";
-import { useUser } from "../hooks/use-user";
+import { useAuth } from "../auth/use-auth";
 import { signUpSchema, type SignUpFormValues } from "../schemas/sign-up.schema";
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   const navigate = useNavigate();
-  const { signUp, loading } = useUser();
+  const { signUp } = useAuth();
 
   const form = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpSchema),
@@ -60,10 +60,8 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
             </Field>
             <FieldGroup>
               <Field>
-                <Button type="submit" disabled={loading}>
-                  Create Account
-                </Button>
-                <Button variant="outline" type="button" disabled={loading}>
+                <Button type="submit">Create Account</Button>
+                <Button variant="outline" type="button">
                   Sign up with Google
                 </Button>
                 <FieldDescription className="px-6 text-center">

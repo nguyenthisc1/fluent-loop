@@ -6,12 +6,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../..
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "../../../../shared/components/ui/field";
 import { Input } from "../../../../shared/components/ui/input";
 import { cn } from "../../../../shared/lib/utils";
-import { useUser } from "../hooks/use-user";
+import { useAuth } from "../auth/use-auth";
 import { signInSchema, type SignInFormValues } from "../schemas/sign-in.schema";
 
 export function SigninForm({ className, ...props }: React.ComponentProps<"div">) {
   const navigate = useNavigate();
-  const { signIn, loading } = useUser();
+  const { signIn } = useAuth();
 
   const form = useForm<SignInFormValues>({
     resolver: zodResolver(signInSchema),
@@ -56,10 +56,8 @@ export function SigninForm({ className, ...props }: React.ComponentProps<"div">)
                 <Input id="password" type="password" required />
               </Field>
               <Field>
-                <Button type="submit" disabled={loading}>
-                  Login
-                </Button>
-                <Button variant="outline" type="button" disabled={loading}>
+                <Button type="submit">Login</Button>
+                <Button variant="outline" type="button">
                   Login with Google
                 </Button>
                 <FieldDescription className="text-center">

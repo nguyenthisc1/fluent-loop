@@ -1,4 +1,4 @@
-import { useUser } from "@/features/user/presentation/hooks/use-user";
+import { useAuth } from "@/features/user/presentation/auth/use-auth";
 import { useVocabularyActions } from "@/features/vocabulary/presentation/hooks/use-vocabulary-actions";
 import type { SuggestedVocabulary } from "../../domain/entities/feedback.types";
 
@@ -9,7 +9,7 @@ type SaveFeedbackVocabularyInput = {
 };
 
 export function useSaveFeedbackVocabulary() {
-  const { user } = useUser();
+  const { user } = useAuth();
   const { saveItem } = useVocabularyActions(user?.id);
 
   async function save(input: SaveFeedbackVocabularyInput) {
