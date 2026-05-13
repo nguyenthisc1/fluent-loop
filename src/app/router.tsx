@@ -3,7 +3,7 @@ import { GuestRoute } from "../features/user/presentation/components/guest-route
 import { OnboardingRoute } from "../features/user/presentation/components/onboarding-route";
 import { ProtectedRoute } from "../features/user/presentation/components/protected-route";
 import { useUser } from "../features/user/presentation/hooks/use-user";
-import SignInPage from "../features/user/presentation/pages/sign-in-page";
+import SignInPage from "../features/user/presentation/pages/sign-in.page";
 
 function AuthGate({ type, children }: { type: "guest" | "onboarding" | "protected"; children: React.ReactNode }) {
   const { status } = useUser();
