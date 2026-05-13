@@ -29,7 +29,7 @@ export class SupabasePracticeRepository implements PracticeRepository {
       interviewRole: input.interviewRole,
       level: input.level,
       duration: input.duration,
-      // practiceFocus: input.practiceFocus,
+      practiceFocus: input.practiceFocus,
       status: "active",
       messages: [
         {

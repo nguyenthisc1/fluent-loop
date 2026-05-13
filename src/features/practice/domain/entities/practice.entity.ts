@@ -1,6 +1,6 @@
 import { ConflictException } from "@/core/exceptions/exception";
 import type { EnglishLevel } from "@/features/user/domain/entities/user.types";
-import type { FeedbackReport, PracticeDuration, PracticeMessage, PracticeMode, PracticeSessionId, PracticeStatus } from "./practice.types";
+import type { FeedbackReport, InterviewDifficulty, InterviewType, PracticeDuration, PracticeFocus, PracticeMessage, PracticeMode, PracticeSessionId, PracticeStatus } from "./practice.types";
 
 export type PracticeSessionEntityProps = {
   id: PracticeSessionId;
@@ -11,10 +11,12 @@ export type PracticeSessionEntityProps = {
   interviewRole?: string;
   level: EnglishLevel;
   duration: PracticeDuration;
-  // practiceFocus?: PracticeFocus[];
+  practiceFocus?: PracticeFocus[];
   status: PracticeStatus;
   messages: PracticeMessage[];
   feedbackReport?: FeedbackReport;
+  interviewType?: InterviewType;
+  difficulty?: InterviewDifficulty;
   createdAt: Date;
   completedAt?: Date;
 };
@@ -58,9 +60,9 @@ export class PracticeSessionEntity {
     return this.props.duration;
   }
 
-  // get practiceFocus(): PracticeFocus[] | undefined {
-  //   return this.props.practiceFocus ? [...this.props.practiceFocus] : undefined;
-  // }
+  get practiceFocus(): PracticeFocus[] | undefined {
+    return this.props.practiceFocus ? [...this.props.practiceFocus] : undefined;
+  }
 
   get status(): PracticeStatus {
     return this.props.status;
@@ -72,6 +74,14 @@ export class PracticeSessionEntity {
 
   get feedbackReport(): FeedbackReport | undefined {
     return this.props.feedbackReport;
+  }
+
+  get interviewType() {
+    return this.props.interviewType;
+  }
+
+  get difficulty() {
+    return this.props.difficulty;
   }
 
   get createdAt(): Date {
@@ -118,7 +128,7 @@ export class PracticeSessionEntity {
     return {
       ...this.props,
       messages: [...this.props.messages],
-      // practiceFocus: this.practiceFocus,
+      practiceFocus: this.practiceFocus,
     };
   }
 }

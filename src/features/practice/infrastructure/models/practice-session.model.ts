@@ -36,10 +36,12 @@ export type PracticeSessionModel = {
   interview_role: string | null;
   level: "A1" | "A2" | "B1" | "B2" | "C1";
   duration: 5 | 10 | 15;
-  // practice_focus: string[] | null;
+  practice_focus: string[] | null;
   status: "active" | "completed";
   messages: PracticeMessageModel[];
   feedback_report: FeedbackReportModel | null;
+  interview_type: "behavioral" | "technical" | "hr_screening" | "product_thinking" | "mixed" | null;
+  difficulty: "friendly" | "standard" | "challenging" | null;
   created_at: string;
   completed_at: string | null;
 };
