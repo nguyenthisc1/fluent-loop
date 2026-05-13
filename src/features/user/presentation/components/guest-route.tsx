@@ -8,17 +8,9 @@ type GuestRouteProps = {
 };
 
 export function GuestRoute({ status, children }: GuestRouteProps) {
-  if (status === "idle" || status === "loading") {
-    return null;
-  }
-
-  if (status === "needs_onboarding") {
-    return <Navigate to="/onboarding" replace />;
-  }
-
-  if (status === "authenticated") {
-    return <Navigate to="/dashboard" replace />;
-  }
+  if (status === "idle" || status === "loading") return null;
+  if (status === "needs_onboarding") return <Navigate to="/onboarding" replace />;
+  if (status === "authenticated") return <Navigate to="/dashboard" replace />;
 
   return children;
 }
