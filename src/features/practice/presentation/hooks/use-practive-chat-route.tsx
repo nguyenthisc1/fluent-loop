@@ -1,4 +1,4 @@
-import { usePracticeSessionRoute } from "./use-practice-session-route.hook";
+import { usePracticeSessionRoute } from "./use-practice-session-route";
 
 export function usePracticeChat() {
   const practice = usePracticeSessionRoute();

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { usePracticeSession } from "./use-practice.hook";
+import { usePracticeSession } from "./use-practice";
 
 export function usePracticeSessionRoute() {
   const { sessionId } = useParams<{ sessionId: string }>();

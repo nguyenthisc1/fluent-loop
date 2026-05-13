@@ -1,7 +1,7 @@
 import { useUser } from "@/features/user/presentation/hooks/use-user";
 import { useNavigate } from "react-router-dom";
 import type { PracticeSetupFormValues } from "../schemas/practice-setup.schema";
-import { usePracticeSession } from "./use-practice.hook";
+import { usePracticeSession } from "./use-practice";
 
 export function useStartDailyPractice() {
   const navigate = useNavigate();
