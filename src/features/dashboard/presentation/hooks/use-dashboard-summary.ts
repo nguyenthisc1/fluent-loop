@@ -1,6 +1,8 @@
 import { queryKeys } from "@/shared/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
+
 import { createDashboardDependencies } from "../../dashboard.container";
+import { presentDashboardSummary } from "../helpers/dashboard-summary.presenter";
 
 export function useDashboardSummary(userId?: string) {
   const dashboardContainer = createDashboardDependencies();
@@ -13,7 +15,8 @@ export function useDashboardSummary(userId?: string) {
         throw new Error("User id is required.");
       }
 
-      return dashboardContainer.getDashboardSummaryUseCase.execute({ userId });
+      const summary = await dashboardContainer.getDashboardSummaryUseCase.execute({ userId });
+      return presentDashboardSummary(summary);
     },
   });
 }
