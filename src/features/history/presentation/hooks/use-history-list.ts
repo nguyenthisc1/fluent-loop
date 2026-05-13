@@ -1,15 +1,17 @@
 import { queryKeys } from "@/shared/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import type { HistoryItemStatus, HistoryMode } from "../../domain/entities/history.types";
+
+import { presentHistoryItem } from "../helpers/history-item.presenter";
 import { createHistoryDependencies } from "../../history.container";
 
-type UseHistoryInput = {
+type UseHistoryListInput = {
   userId?: string;
   mode?: HistoryMode;
   status?: HistoryItemStatus;
 };
 
-export function useHistory(input: UseHistoryInput) {
+export function useHistoryList(input: UseHistoryListInput) {
   const historyContainer = createHistoryDependencies();
 
   return useQuery({
@@ -20,27 +22,13 @@ export function useHistory(input: UseHistoryInput) {
         throw new Error("User id is required.");
       }
 
-      return historyContainer.getHistoryItemsUseCase.execute({
+      const items = await historyContainer.getHistoryItemsUseCase.execute({
         userId: input.userId,
         mode: input.mode,
         status: input.status,
       });
-    },
-  });
-}
 
-export function useRecentHistory(userId?: string, limit = 5) {
-  const historyContainer = createHistoryDependencies();
-
-  return useQuery({
-    queryKey: [...queryKeys.history.recent(userId ?? "anonymous"), limit],
-    enabled: !!userId,
-    queryFn: async () => {
-      if (!userId) {
-        throw new Error("User id is required.");
-      }
-
-      return historyContainer.getRecentHistoryUseCase.execute({ userId, limit });
+      return items.map((item) => presentHistoryItem(item));
     },
   });
 }
