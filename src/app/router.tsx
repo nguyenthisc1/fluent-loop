@@ -1,23 +1,15 @@
+import DashboardPage from "@/features/dashboard/presentation/pages/dashboard.page";
+import FeedbackPage from "@/features/feedback/presentation/pages/feedback.page";
+import HistoryPage from "@/features/history/presentation/pages/history.page";
+import InterviewSetupPage from "@/features/practice/presentation/pages/Interview-setup.page";
+import PracticeSessionPage from "@/features/practice/presentation/pages/practice-session.page";
+import PracticeSetupPage from "@/features/practice/presentation/pages/practice-setup.page";
+import OnboardingPage from "@/features/user/presentation/pages/onboarding.page";
+import SignInPage from "@/features/user/presentation/pages/sign-in.page";
+import SignUpPage from "@/features/user/presentation/pages/sign-up.page";
+import VocabularyPage from "@/features/vocabulary/presentation/pages/vocabulary.page";
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import { GuestRoute } from "../features/user/presentation/components/guest-route";
-import { OnboardingRoute } from "../features/user/presentation/components/onboarding-route";
-import { ProtectedRoute } from "../features/user/presentation/components/protected-route";
-import { useUser } from "../features/user/presentation/hooks/use-user";
-import SignInPage from "../features/user/presentation/pages/sign-in.page";
-
-function AuthGate({ type, children }: { type: "guest" | "onboarding" | "protected"; children: React.ReactNode }) {
-  const { status } = useUser();
-
-  if (type === "guest") {
-    return <GuestRoute status={status}>{children}</GuestRoute>;
-  }
-
-  if (type === "onboarding") {
-    return <OnboardingRoute status={status}>{children}</OnboardingRoute>;
-  }
-
-  return <ProtectedRoute status={status}>{children}</ProtectedRoute>;
-}
+import { AuthGate } from "./auth-gate";
 
 export const router = createBrowserRouter([
   {
@@ -36,7 +28,7 @@ export const router = createBrowserRouter([
     path: "/sign-up",
     element: (
       <AuthGate type="guest">
-        <SignInPage />
+        <SignUpPage />
       </AuthGate>
     ),
   },
@@ -44,7 +36,7 @@ export const router = createBrowserRouter([
     path: "/onboarding",
     element: (
       <AuthGate type="onboarding">
-        <SignInPage />
+        <OnboardingPage />
       </AuthGate>
     ),
   },
@@ -52,8 +44,76 @@ export const router = createBrowserRouter([
     path: "/dashboard",
     element: (
       <AuthGate type="protected">
-        <SignInPage />
+        <DashboardPage />
       </AuthGate>
     ),
+  },
+  {
+    path: "/practice",
+    element: (
+      <AuthGate type="protected">
+        <PracticeSetupPage />
+      </AuthGate>
+    ),
+  },
+  {
+    path: "/practice/:sessionId",
+    element: (
+      <AuthGate type="protected">
+        <PracticeSessionPage />
+      </AuthGate>
+    ),
+  },
+  {
+    path: "/interview",
+    element: (
+      <AuthGate type="protected">
+        <InterviewSetupPage />
+      </AuthGate>
+    ),
+  },
+  {
+    path: "/interview/:sessionId",
+    element: (
+      <AuthGate type="protected">
+        <PracticeSessionPage />
+      </AuthGate>
+    ),
+  },
+  {
+    path: "/feedback/:reportId",
+    element: (
+      <AuthGate type="protected">
+        <FeedbackPage />
+      </AuthGate>
+    ),
+  },
+  {
+    path: "/history",
+    element: (
+      <AuthGate type="protected">
+        <HistoryPage />
+      </AuthGate>
+    ),
+  },
+  {
+    path: "/vocabulary",
+    element: (
+      <AuthGate type="protected">
+        <VocabularyPage />
+      </AuthGate>
+    ),
+  },
+  // {
+  //   path: "/settings",
+  //   element: (
+  //     <AuthGate type="protected">
+  //       <SettingsPage />
+  //     </AuthGate>
+  //   ),
+  // },
+  {
+    path: "*",
+    element: <Navigate to="/dashboard" replace />,
   },
 ]);
