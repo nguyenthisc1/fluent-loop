@@ -1,5 +1,6 @@
 import { MockUserRepository } from "./__test__/mock/mock-user.repository";
-import { UserService } from "./application/services/user.service";
+import { UserController } from "./application/controllers/user.controller";
+import { UserExceptionPresenter } from "./application/presenters/exception.presenter";
 import { CompleteOnboardingUseCase } from "./application/usecases/complete-onbroading.usecase";
 import { RestoreSessionUseCase } from "./application/usecases/restore-session.usecase";
 import { SignInUseCase } from "./application/usecases/sign-in.usecase";
@@ -10,7 +11,8 @@ import type { UserRepository } from "./domain/repositories/user.repository";
 
 export type UserDependencies = {
   userRepository: UserRepository;
-  userService: UserService;
+  userController: UserController;
+  userExceptionPresenter: UserExceptionPresenter;
   restoreSessionUseCase: RestoreSessionUseCase;
   signInUseCase: SignInUseCase;
   signUpUseCase: SignUpUseCase;
@@ -21,16 +23,25 @@ export type UserDependencies = {
 
 export function createUserDependencies(): UserDependencies {
   const userRepository = new MockUserRepository();
-  const userService = new UserService(userRepository);
+  const signInUseCase = new SignInUseCase(userRepository);
+  const signUpUseCase = new SignUpUseCase(userRepository);
+  const signOutUseCase = new SignOutUseCase(userRepository);
+  const completeOnboardingUseCase = new CompleteOnboardingUseCase(userRepository);
+  const restoreSessionUseCase = new RestoreSessionUseCase(userRepository);
+  const updateUserUseCase = new UpdateUserUseCase(userRepository);
+
+  const userController = new UserController(signInUseCase, signUpUseCase, completeOnboardingUseCase);
+  const userExceptionPresenter = new UserExceptionPresenter();
 
   return {
     userRepository,
-    userService,
-    restoreSessionUseCase: new RestoreSessionUseCase(userService),
-    signInUseCase: new SignInUseCase(userService),
-    signUpUseCase: new SignUpUseCase(userService),
-    signOutUseCase: new SignOutUseCase(userService),
-    completeOnboardingUseCase: new CompleteOnboardingUseCase(userService),
-    updateUserUseCase: new UpdateUserUseCase(userService),
+    userController,
+    userExceptionPresenter,
+    restoreSessionUseCase,
+    signInUseCase,
+    signUpUseCase,
+    signOutUseCase,
+    completeOnboardingUseCase,
+    updateUserUseCase,
   };
 }

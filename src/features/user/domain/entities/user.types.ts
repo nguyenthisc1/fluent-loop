@@ -27,25 +27,6 @@ export type AuthSession = {
   expiresAt?: Date;
 };
 
-export type SignInInput = {
-  email: string;
-  password: string;
-};
-
-export type SignUpInput = {
-  email: string;
-  password: string;
-};
-
-export type CompleteOnboardingInput = {
-  userId: UserId;
-  displayName: string;
-  englishLevel: EnglishLevel;
-  learningGoal: LearningGoal;
-  nativeLanguage?: string;
-  timezone?: string;
-};
-
 export type UpdateUserInput = {
   userId: UserId;
   displayName?: string;
@@ -55,3 +36,14 @@ export type UpdateUserInput = {
   nativeLanguage?: string;
   timezone?: string;
 };
+
+export interface SignUpProps {
+  email: string;
+  password: string;
+  displayName?: string;
+  avatarUrl?: string;
+  englishLevel?: EnglishLevel;
+  learningGoal?: LearningGoal;
+  nativeLanguage?: string;
+  timezone?: string;
+}

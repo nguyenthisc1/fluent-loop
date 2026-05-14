@@ -1,10 +1,10 @@
 import type { NoInputUseCase } from "@/core/application/usecases/usecase";
-import type { UserService } from "../services/user.service";
+import type { UserRepository } from "../../domain/repositories/user.repository";
 
 export class SignOutUseCase implements NoInputUseCase<void> {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
   execute(): Promise<void> {
-    return this.userService.signOut();
+    return this.userRepository.signOut();
   }
 }
