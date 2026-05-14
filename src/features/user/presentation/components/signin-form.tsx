@@ -13,7 +13,11 @@ export function SigninForm({ className, ...props }: React.ComponentProps<"div">)
   const navigate = useNavigate();
   const { signIn } = useAuth();
 
-  const form = useForm<SignInFormValues>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<SignInFormValues>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
       email: "",
@@ -22,14 +26,20 @@ export function SigninForm({ className, ...props }: React.ComponentProps<"div">)
   });
 
   async function onSubmit(values: SignInFormValues) {
-    const session = await signIn(values);
+    try {
+      const session = await signIn(values);
+      console.log(session);
 
-    if (session.user.onboardingCompleted) {
-      navigate("/dashboard", { replace: true });
-      return;
+      if (session?.user?.onboardingCompleted) {
+        navigate("/dashboard", { replace: true });
+        return;
+      }
+      navigate("/onboarding", { replace: true });
+    } catch (error) {
+      // handle error (could show an error message)
+      // For now, you could log the error (remove in prod)
+      console.error(error);
     }
-
-    navigate("/onboarding", { replace: true });
   }
 
   return (
@@ -40,11 +50,12 @@ export function SigninForm({ className, ...props }: React.ComponentProps<"div">)
           <CardDescription>Enter your email below to login to your account</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
-                <Input id="email" type="email" placeholder="m@example.com" required />
+                <Input id="email" type="email" placeholder="m@example.com" required autoComplete="email" {...register("email")} aria-invalid={!!errors.email} />
+                {errors.email && <FieldDescription className="text-red-500">{errors.email.message as string}</FieldDescription>}
               </Field>
               <Field>
                 <div className="flex items-center">
@@ -53,10 +64,13 @@ export function SigninForm({ className, ...props }: React.ComponentProps<"div">)
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input id="password" type="password" required autoComplete="current-password" {...register("password")} aria-invalid={!!errors.password} />
+                {errors.password && <FieldDescription className="text-red-500">{errors.password.message as string}</FieldDescription>}
               </Field>
               <Field>
-                <Button type="submit">Login</Button>
+                <Button type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? "Logging in..." : "Login"}
+                </Button>
                 <Button variant="outline" type="button">
                   Login with Google
                 </Button>
