@@ -1,11 +1,20 @@
 import type { UseCase } from "@/core/application/usecases/usecase";
-import type { CompleteOnboardingInput, User } from "../../domain/entities/user.types";
-import type { UserService } from "../services/user.service";
+import type { EnglishLevel, LearningGoal, User, UserId } from "../../domain/entities/user.types";
+import type { UserRepository } from "../../domain/repositories/user.repository";
 
-export class CompleteOnboardingUseCase implements UseCase<CompleteOnboardingInput, User> {
-  constructor(private readonly userService: UserService) {}
+export interface CompleteOnboardingCommand {
+  userId: UserId;
+  displayName: string;
+  englishLevel: EnglishLevel;
+  learningGoal: LearningGoal;
+  nativeLanguage?: string;
+  timezone?: string;
+}
 
-  execute(input: CompleteOnboardingInput): Promise<User> {
-    return this.userService.completeOnboarding(input);
+export class CompleteOnboardingUseCase implements UseCase<CompleteOnboardingCommand, User> {
+  constructor(private readonly userRepository: UserRepository) {}
+
+  execute(input: CompleteOnboardingCommand): Promise<User> {
+    return this.userRepository.completeOnboarding(input);
   }
 }

@@ -1,16 +1,19 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import { Button } from "../../../../shared/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../../shared/components/ui/card";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "../../../../shared/components/ui/field";
 import { Input } from "../../../../shared/components/ui/input";
 import { cn } from "../../../../shared/lib/utils";
 import { useAuth } from "../auth/use-auth";
+import { useUserErrorToast } from "../hooks/use-user-error-toast";
 import { signInSchema, type SignInFormValues } from "../schemas/sign-in.schema";
 
 export function SigninForm({ className, ...props }: React.ComponentProps<"div">) {
   const navigate = useNavigate();
+  const { showError } = useUserErrorToast();
   const { signIn } = useAuth();
 
   const {
@@ -31,14 +34,16 @@ export function SigninForm({ className, ...props }: React.ComponentProps<"div">)
       console.log(session);
 
       if (session?.user?.onboardingCompleted) {
+        toast.success("Welcome back", {
+          description: "You have signed in successfully.",
+        });
+
         navigate("/dashboard", { replace: true });
         return;
       }
       navigate("/onboarding", { replace: true });
     } catch (error) {
-      // handle error (could show an error message)
-      // For now, you could log the error (remove in prod)
-      console.error(error);
+      showError(error);
     }
   }
 

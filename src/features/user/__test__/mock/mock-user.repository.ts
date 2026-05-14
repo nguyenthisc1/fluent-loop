@@ -1,6 +1,9 @@
-import { NotFoundException } from "../../../../core/exceptions/exception";
-import type { AuthSession, CompleteOnboardingInput, SignInInput, SignUpInput, UpdateUserInput, User, UserId } from "../../domain/entities/user.types";
+import type { CompleteOnboardingCommand } from "../../application/usecases/complete-onbroading.usecase";
+import type { SignInCommand } from "../../application/usecases/sign-in.usecase";
+import type { SignUpCommand } from "../../application/usecases/sign-up.usecase";
+import type { AuthSession, UpdateUserInput, User, UserId } from "../../domain/entities/user.types";
 import type { UserRepository } from "../../domain/repositories/user.repository";
+import { AuthInvalidCredentialsException } from "../../domain/user.exceptions";
 import { mockNeedsOnboardingUser } from "./mock-user.data";
 
 export class MockUserRepository implements UserRepository {
@@ -15,11 +18,14 @@ export class MockUserRepository implements UserRepository {
     return this.currentSession;
   }
 
-  async signIn(input: SignInInput): Promise<AuthSession> {
+  async signIn(input: SignInCommand): Promise<AuthSession> {
     const user = Array.from(this.users.values()).find((item) => item.email === input.email);
 
     if (!user) {
-      throw new NotFoundException("User not found.");
+      throw new AuthInvalidCredentialsException(undefined, {
+        reason: "mock_user_not_found",
+        email: input.email,
+      });
     }
 
     this.currentSession = {
@@ -31,7 +37,7 @@ export class MockUserRepository implements UserRepository {
     return this.currentSession;
   }
 
-  async signUp(input: SignUpInput): Promise<AuthSession> {
+  async signUp(input: SignUpCommand): Promise<AuthSession> {
     const user: User = {
       id: crypto.randomUUID(),
       email: input.email,
@@ -64,11 +70,14 @@ export class MockUserRepository implements UserRepository {
     return this.users.get(userId) ?? null;
   }
 
-  async completeOnboarding(input: CompleteOnboardingInput): Promise<User> {
+  async completeOnboarding(input: CompleteOnboardingCommand): Promise<User> {
     const user = this.users.get(input.userId);
 
     if (!user) {
-      throw new NotFoundException("User not found.");
+      throw new AuthInvalidCredentialsException(undefined, {
+        reason: "mock_user_not_found",
+        username: input.displayName,
+      });
     }
 
     const updatedUser: User = {
@@ -92,7 +101,10 @@ export class MockUserRepository implements UserRepository {
     const user = this.users.get(input.userId);
 
     if (!user) {
-      throw new NotFoundException("User not found.");
+      throw new AuthInvalidCredentialsException(undefined, {
+        reason: "mock_user_not_found",
+        username: input.displayName,
+      });
     }
 
     const updatedUser: User = {
